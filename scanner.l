@@ -3,6 +3,7 @@
 */
 %{
 #include "string.h"
+#include "tokens.h"
 
 
 int num_lines = 1;
@@ -51,16 +52,16 @@ protected return TK_PR_PROTECTED;
 "||"	return TK_OC_OR;
 ">>"	return TK_OC_SR;
 "<<"	return TK_OC_SL;
-"%>%"	return TK_OC_PIP;
-"%|%"	return TK_OC_OOR;
+"%>%"	return TK_OC_FORWARD_PIPE;
+"%|%"	return TK_OC_BASH_PIPE;
 
-|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."    return yytext[0];
+";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."    return yytext[0];
 
-[E][+|-]?[0-9]+  {  yylval.valor_lexico = (comp_dict_item_t *) insert_dict(table, yytext, num_lines, POA_LIT_FLOAT); return TK_LIT_FLOAT;}
+[E][+|-]?[0-9]+  {return TK_LIT_FLOAT;}
 
-[0-9]+    {  return TK_LIT_INT;}
+[0-9]+    {return TK_LIT_INT;}
 
-[0-9]+"."[0-9]* {   return TK_LIT_FLOAT;}
+[0-9]+"."[0-9]* { return TK_LIT_FLOAT;}
 
 false   {   return TK_LIT_FALSE;}
 true    {   return TK_LIT_TRUE;}
@@ -88,13 +89,13 @@ true    {   return TK_LIT_TRUE;}
 .	 {errorAux[0] = yytext[0]; BEGIN(error);}
 <error>[\t ] {
 	BEGIN(INITIAL);
-	yyerror("Erro localizado na linha");
+	//yyerror("Erro localizado na linha");
 	yytext--;
 	return TOKEN_ERRO;
 	}
 <error>[\n] {
 	BEGIN(INITIAL);
-	yyerror("Erro localizado na linha");
+	//yyerror("Erro localizado na linha");
 	errorAux[1] = '\n';
 	num_lines++;
 	yytext--;
@@ -103,7 +104,7 @@ true    {   return TK_LIT_TRUE;}
 
 <error>[^\n \t]* {
 	BEGIN(INITIAL);
-	yyerror("Erro localizado na linha");
+	//yyerror("Erro localizado na linha");
 	errorAux[0] = '\0';
 	yytext--;
 	return TOKEN_ERRO;
