@@ -9,11 +9,11 @@
 #
 
 etapa1: lex.yy.o main.o
-	gcc -o etapa1 lex.yy.o main.o
+	gcc -o etapa1 lex.yy.o main.o -lfl
 main.o: main.c
-	gcc -c main.c
+	gcc -c main.c -lfl
 lex.yy.o: lex.yy.c
-	gcc -c lex.yy.c
+	gcc -c lex.yy.c -lfl
 lex.yy.c: scanner.l
 	flex --header-file=lex.yy.h scanner.l 
 clean:

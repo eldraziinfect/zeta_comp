@@ -1,8 +1,15 @@
 /*
 	 Grupo Zeta
+<<<<<<< HEAD
+
+	João Vicente Lessa - 00243673
+	Luiz Miguel Krûger - 00228271
+	08/2018
+=======
 	 João Vicente Lessa 243673
 	 Luiz M Krüger
 	 08/2018
+>>>>>>> 5c1b95563b4da6f63cd3eb3d2c4c764dcc007d4c
 */
 %{
 #include "string.h"
@@ -10,12 +17,11 @@
 
 
 int num_lines = 1;
-char errorAux[2];
+int get_line_number_();
 %}
 
 
 %x comment
-%x error
 
 %%
 
@@ -89,31 +95,11 @@ true    {   return TK_LIT_TRUE;}
 
 [0-9]+[a-zA-Z_][a-zA-Z_0-9]* 	return TOKEN_ERRO;
 
-.	 {errorAux[0] = yytext[0]; BEGIN(error);}
-<error>[\t ] {
-	BEGIN(INITIAL);
-	//yyerror("Erro localizado na linha");
-	yytext--;
-	return TOKEN_ERRO;
-	}
-<error>[\n] {
-	BEGIN(INITIAL);
-	//yyerror("Erro localizado na linha");
-	errorAux[1] = '\n';
-	num_lines++;
-	yytext--;
-	return TOKEN_ERRO;
-	}
-
-<error>[^\n \t]* {
-	BEGIN(INITIAL);
-	//yyerror("Erro localizado na linha");
-	errorAux[0] = '\0';
-	yytext--;
-	return TOKEN_ERRO;
-	}
-
+.	 return TOKEN_ERRO;
 
 %%
 
+int get_line_number()
+{	return num_lines;
+}
 
