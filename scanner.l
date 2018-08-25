@@ -1,5 +1,8 @@
 /*
 	 Grupo Zeta
+	 João Vicente Lessa 243673
+	 Luiz M Krüger
+	 08/2018
 */
 %{
 #include "string.h"
