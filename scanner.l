@@ -1,23 +1,17 @@
 /*
 	 Grupo Zeta
-<<<<<<< HEAD
 
 	João Vicente Lessa - 00243673
 	Luiz Miguel Krûger - 00228271
 	08/2018
-=======
-	 João Vicente Lessa 243673
-	 Luiz M Krüger
-	 08/2018
->>>>>>> 5c1b95563b4da6f63cd3eb3d2c4c764dcc007d4c
 */
 %{
-#include "string.h"
+#include <string.h>
 #include "tokens.h"
 
 
 int num_lines = 1;
-int get_line_number_();
+int get_line_number();
 %}
 
 
@@ -52,6 +46,8 @@ class	  return TK_PR_CLASS;
 private	  return TK_PR_PRIVATE;
 public	  return TK_PR_PUBLIC;
 protected return TK_PR_PROTECTED;
+false   {   return TK_LIT_FALSE;}
+true    {   return TK_LIT_TRUE;}
 
 "<="	return TK_OC_LE;
 ">="	return TK_OC_GE;
@@ -64,16 +60,14 @@ protected return TK_PR_PROTECTED;
 "%>%"	return TK_OC_FORWARD_PIPE;
 "%|%"	return TK_OC_BASH_PIPE;
 
-";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."    return yytext[0];
+";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."|","|"|"|"$"|"?"  return yytext[0];
 
 [E][+|-]?[0-9]+  {return TK_LIT_FLOAT;}
 
-[0-9]+    {return TK_LIT_INT;}
+[+|-]?[0-9]+    {return TK_LIT_INT;}
 
-[0-9]+"."[0-9]* { return TK_LIT_FLOAT;}
+[+|-]?[0-9]+"."[0-9]* { return TK_LIT_FLOAT;}
 
-false   {   return TK_LIT_FALSE;}
-true    {   return TK_LIT_TRUE;}
 
 '[^']'  {  return TK_LIT_CHAR;}
 
@@ -92,8 +86,6 @@ true    {   return TK_LIT_TRUE;}
 "//"[^\n]*
 
 \n 	++num_lines;
-
-[0-9]+[a-zA-Z_][a-zA-Z_0-9]* 	return TOKEN_ERRO;
 
 .	 return TOKEN_ERRO;
 
