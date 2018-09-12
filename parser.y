@@ -49,38 +49,170 @@ void yyerror (char const *s);
 
 %%
 
-programa: element
+programa: 
+	element
 ;
 
-element: global_variavel_decla element
-| novos_tipos_decla element
-| funcoes element
-| %empty
+element: 
+	global_variavel_decla element
+	| novos_tipos_decla element
+	| funcoes element
+	| %empty
 ;
 
-funcoes: TK_PR_STATIC tipo TK_IDENTIFICADOR lista_parametros bloco
-| Tipo TK_IDENTIFICADOR lista_parametros bloco
+funcoes: 
+	static_opcional tipo TK_IDENTIFICADOR lista_parametros bloco
 ;  
 
-lista_parametros: parametro ',' lista_parametros
-| parametro
+lista_parametros: 
+	parametro ',' lista_parametros
+	| parametro
 ;
 
-parametro: TK_PR_CONST Tipo TK_IDENTIFICADOR
-| Tipo TK_IDENTIFICADOR
+parametro:
+	const_opcional tipo TK_IDENTIFICADOR
 ;
 
-bloco: "bloco"
+bloco: 
+	'{' comandos '}'
 ;
 
-global_variavel_decla: "GVD"
+comandos: 
+	comando comandos
+	| comando
 ;
 
-novos_tipos_decla: "NTD"
+comando: 
+	local_variavel_decla
+	| atribuicao
+	| entrada_saida_retorno
+	| chamada_funcao
+	| bloco
+	| fluxo_controle
 ;
 
-tipo: "tipo"
+local_variavel_decla: 
+	static_opcional const_opcional tipo TK_IDENTIFICADOR
+	| static_opcional const_opcional tipo TK_IDENTIFICADOR TK_OC_LE literal
+;
+
+literal:
+	TK_LIT_INT
+	| TK_LIT_FLOAT
+	| TK_LIT_FALSE
+	| TK_LIT_TRUE
+	| TK_LIT_CHAR
+	| TK_LIT_STRING
+;
+
+atribuicao:
+	atribuicao_primitivo
+	| atribuicao_tipo_usuario
+;
+
+atribuicao_primitivo:
+	TK_IDENTIFICADOR '=' expressao
+	| '[' expressao ']' '=' expressao
+;
+
+atribuicao_tipo_usuario:
+	TK_IDENTIFICADOR '$' campo '=' expressao
+	| '[' expressao ']' '$' campo '=' expressao
+;
+
+entrada_saida_retorno:
+	TK_PR_INPUT expressao
+	|TK_PR_OUTPUT lista_expressao
+;
+
+lista_expressao: 
+	expressao ',' lista_expressao
+	| expressao
+;
+
+chamada_funcao: 
+	TK_IDENTIFICADOR '(' lista_argumentos ')'
+;
+
+lista_argumentos:
+	argumento ',' lista_argumentos
+	| argumento
+;
+
+argumento:
+	expressao
+	| '.'
+;
+// -> numero = inteiro?
+shift: 
+	TK_IDENTIFICADOR shift_simbol literal
+	| TK_IDENTIFICADOR '$' campo shift_simbol literal
+	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol literal
+	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol literal
+	| TK_IDENTIFICADOR shift_simbol expressao
+	| TK_IDENTIFICADOR '$' campo shift_simbol expressao
+	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol expressao
+	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol expressao
+;
+
+shift_simbol:
+	TK_OC_SL
+	| TK_OC_SR
+;
+
+retorno:
+	TK_PR_RETURN expressao ';'
+;
+
+break:
+	TK_PR_BREAK ';'
+;
+
+continue:
+	TK_PR_CONTINUE ';'
+;
+
+case:
+	TK_PR_CASE TK_LIT_INT ':'
 ;
 
 
+fluxo_controle: 
+	TK_PR_IF '(' expressao ')' TK_PR_THEN bloco
+	| TK_PR_IF '(' expressao ')' TK_PR_THEN bloco TK_PR_ELSE bloco
+	| TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' lista_expressao ')' bloco
+	| TK_PR_FOR '(' lista_comandos ':' expressao ':' lista_comandos ')' bloco
+	| TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco
+	| "do bloco while ( exp )"
+;
+
+expressao: 
+	"exp"
+;
+
+campo: 
+	"campo"
+;
+
+global_variavel_decla: 
+	"GVD"
+;
+
+novos_tipos_decla: 
+	"NTD"
+;
+
+tipo: 
+	"tipo"
+;
+
+static_opcional: 
+	TK_PR_STATIC
+	| %empty
+	;
+
+const_opcional:
+	TK_PR_CONST
+	| %empty
+;
 %%
