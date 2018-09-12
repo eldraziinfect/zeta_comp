@@ -7,7 +7,8 @@
 # other interfaces like getLineNumber, initMe, running...
 # Use make clean to remove old files before remaking everything
 #
-
+etapa2: parser.y
+	bison -d parser.y
 etapa1: lex.yy.o main.o
 	gcc -o etapa1 lex.yy.o main.o -lfl
 main.o: main.c

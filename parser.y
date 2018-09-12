@@ -49,33 +49,38 @@ void yyerror (char const *s);
 
 %%
 
-programa: Element
+programa: element
 ;
 
-Element: GlobalVariDecla Element
-| NovosTiposDecla Element
-| Funcoes Element
+element: global_variavel_decla element
+| novos_tipos_decla element
+| funcoes element
 | %empty
 ;
 
-Funcoes: TK_PR_STATIC Tipo TK_IDENTIFICADOR ListaParametros Bloco
-| Tipo TK_IDENTIFICADOR ListaParametros Bloco
+funcoes: TK_PR_STATIC tipo TK_IDENTIFICADOR lista_parametros bloco
+| Tipo TK_IDENTIFICADOR lista_parametros bloco
 ;  
 
-ListaParametros: Parametro ',' Listaparametros
+lista_parametros: parametro ',' lista_parametros
 | parametro
 ;
 
-Parametro: TK_PR_CONST Tipo TK_IDENTIFICADOR
+parametro: TK_PR_CONST Tipo TK_IDENTIFICADOR
 | Tipo TK_IDENTIFICADOR
 ;
 
-Bloco:
+bloco: "bloco"
 ;
 
-GlobalVariDecla:
+global_variavel_decla: "GVD"
 ;
 
-novosTiposDecla:
+novos_tipos_decla: "NTD"
 ;
+
+tipo: "tipo"
+;
+
+
 %%
