@@ -183,11 +183,78 @@ fluxo_controle:
 	| TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' lista_expressao ')' bloco
 	| TK_PR_FOR '(' lista_comandos ':' expressao ':' lista_comandos ')' bloco
 	| TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco
-	| "do bloco while ( exp )"
+	| TK_PR_DO bloco TK_PR_WHILE '(' expressao ')'
 ;
 
 expressao: 
-	"exp"
+	exp_aritmetica
+	| exp_logica
+	| exp_pipes
+;
+
+exp_aritmetica:
+	operador_exp_arit
+	| operandor_unario_opcional operando_exp_arit_bin operandor_unario_opcional exp_aritmetica
+	| operando_exp_arit operador_exp_arit '(' exp_aritmetica ')'
+	| "falta coisa"
+;
+
+operando_exp_arit:
+	TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' exp_inteira ']'
+	| TK_LIT_INT
+	| TK_LIT_FLOAT
+	| chamada_funcao
+;
+
+operandor_unario_opcional:
+	'+'	
+	| '-'
+	| '*'
+	| '!'
+	| '?'
+	| '#'
+	| '&'
+	| %empty
+;
+
+operador_exp_arit_bin:
+	'+'	
+	| '-'
+	| '*'
+	| '/'
+	| '%'
+	| '|'
+	| '^'
+	| '&'
+	| operador_relacional
+;
+
+exp_logica:
+	operando_exp_arit operador_relacional operando_exp_arit
+
+	| operando_logico operador_logico operando_logico
+
+;
+// TO DO: Nesta etapa do trabalho não há distinção entre os tipos de expressões.
+operando_logico:
+	exp_logica
+	| TK_PR_FALSE
+	| TK_PR_TRUE
+
+operador_relacional:
+	"=="
+	| ">="
+	| "<="
+	| "!="
+	| '>'
+	| '<'
+;
+
+operador_logico:
+	"&&"
+	| "||"
+	| '!'
 ;
 
 campo: 
@@ -203,7 +270,11 @@ novos_tipos_decla:
 ;
 
 tipo: 
-	"tipo"
+	 TK_PR_FLOAT
+	| TK_PR_BOOL
+	| TK_PR_CHAR
+	| TK_PR_STRING
+	| TK_PR_INT
 ;
 
 static_opcional: 
