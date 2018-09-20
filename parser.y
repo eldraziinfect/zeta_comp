@@ -60,6 +60,27 @@ element:
 	| %empty
 ;
 
+
+global_variavel_decla: 
+	TK_IDENTIFICADOR static_opcional tipo TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR 
+;
+
+novos_tipos_decla: 
+	TK_PR_CLASS TK_IDENTIFICADOR '[' lista_campos ']' ';'
+;
+
+lista_campos:
+	encapsulamento TK_IDENTIFICADOR ':' lista_campos
+	| encapsulamento TK_IDENTIFICADOR
+;
+
+encapsulamento:
+	TK_PR_PRIVATE
+	| TK_PR_PROTECTED
+	| TK_PR_PUBLIC
+;
+
 funcoes: 
 	static_opcional tipo TK_IDENTIFICADOR lista_parametros bloco
 ;  
@@ -78,8 +99,8 @@ bloco:
 ;
 
 comandos: 
-	comando comandos
-	| comando
+	comando ';' comandos
+	| comando ';'
 ;
 
 comando: 
@@ -120,6 +141,10 @@ atribuicao_tipo_usuario:
 	| '[' expressao ']' '$' campo '=' expressao
 ;
 
+campo: 
+	TK_IDENTIFICADOR
+;
+
 entrada_saida_retorno:
 	TK_PR_INPUT expressao
 	|TK_PR_OUTPUT lista_expressao
@@ -143,7 +168,7 @@ argumento:
 	expressao
 	| '.'
 ;
-// -> numero = inteiro?
+
 shift: 
 	TK_IDENTIFICADOR shift_simbol literal
 	| TK_IDENTIFICADOR '$' campo shift_simbol literal
@@ -186,6 +211,11 @@ fluxo_controle:
 	| TK_PR_DO bloco TK_PR_WHILE '(' expressao ')'
 ;
 
+lista_comandos:
+	comando ',' comando ';'
+	| comando ';'
+;
+
 expressao: 
 	exp_aritmetica
 	| exp_logica
@@ -193,21 +223,21 @@ expressao:
 ;
 
 exp_aritmetica:
-	operador_exp_arit
-	| operandor_unario_opcional operando_exp_arit_bin operandor_unario_opcional exp_aritmetica
+	operando_exp_arit
+	| operador_unario_opcional operando_exp_arit operador_exp_arit operador_unario_opcional exp_aritmetica//recurs 
 	| operando_exp_arit operador_exp_arit '(' exp_aritmetica ')'
-	| "falta coisa"
+	// ternarios?
 ;
 
 operando_exp_arit:
 	TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '[' exp_inteira ']'
+	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
 	| TK_LIT_INT
 	| TK_LIT_FLOAT
 	| chamada_funcao
 ;
 
-operandor_unario_opcional:
+operador_unario_opcional:
 	'+'	
 	| '-'
 	| '*'
@@ -218,7 +248,7 @@ operandor_unario_opcional:
 	| %empty
 ;
 
-operador_exp_arit_bin:
+operador_exp_arit:
 	'+'	
 	| '-'
 	| '*'
@@ -232,15 +262,15 @@ operador_exp_arit_bin:
 
 exp_logica:
 	operando_exp_arit operador_relacional operando_exp_arit
-
-	| operando_logico operador_logico operando_logico
+	| operando_logico operador_logico operando_logico // que podem ser expressoes
 
 ;
-// TO DO: Nesta etapa do trabalho não há distinção entre os tipos de expressões.
+
 operando_logico:
 	exp_logica
-	| TK_PR_FALSE
-	| TK_PR_TRUE
+	| TK_LIT_FALSE
+	| TK_LIT_TRUE
+;
 
 operador_relacional:
 	"=="
@@ -257,20 +287,18 @@ operador_logico:
 	| '!'
 ;
 
-campo: 
-	"campo"
+exp_pipes:
+	chamada_funcao operador_pipe exp_pipes
+	| chamada_funcao operador_pipe chamada_funcao
 ;
 
-global_variavel_decla: 
-	"GVD"
-;
-
-novos_tipos_decla: 
-	"NTD"
+operador_pipe:
+	"%>%"
+	| "%|%"
 ;
 
 tipo: 
-	 TK_PR_FLOAT
+	TK_PR_FLOAT
 	| TK_PR_BOOL
 	| TK_PR_CHAR
 	| TK_PR_STRING
