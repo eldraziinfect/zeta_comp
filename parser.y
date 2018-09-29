@@ -108,6 +108,7 @@ comando:
 	| atribuicao
 	| entrada_saida_retorno
 	| chamada_funcao
+	| shift
 	| bloco
 	| fluxo_controle
 ;
@@ -148,6 +149,9 @@ campo:
 entrada_saida_retorno:
 	TK_PR_INPUT expressao
 	|TK_PR_OUTPUT lista_expressao
+	| retorno
+	| break
+	| continue
 ;
 
 lista_expressao: 
@@ -273,10 +277,10 @@ operando_logico:
 ;
 
 operador_relacional:
-	"=="
-	| ">="
+	TK_OC_EQ
+	| TK_OC_GE
 	| "<="
-	| "!="
+	| TK_OC_NE
 	| '>'
 	| '<'
 ;
@@ -293,8 +297,8 @@ exp_pipes:
 ;
 
 operador_pipe:
-	"%>%"
-	| "%|%"
+	TK_OC_FORWARD_PIPE
+	| TK_OC_BASH_PIPE
 ;
 
 tipo: 
