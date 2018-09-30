@@ -234,20 +234,25 @@ expressao:
 ;
 
 exp_aritmetica:
-	operando_exp_arit
-	// operador_unario_opcional operando_exp_arit operador_exp_arit operador_unario_opcional exp_aritmetica//recurs 
-	| operando_exp_arit operador_exp_arit '(' exp_aritmetica ')'
+	expressao_unaria
+	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
+	| '(' exp_aritmetica ')'
 	// ternarios?
 ;
 
-operando_exp_arit:
+operando:
 	TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
 	| operando_exp_arit_literal
 	| chamada_funcao
 ;
-/*
-operador_unario_opcional:
+
+expressao_unaria:
+	operador_unario expressao_unaria
+	operando
+;
+
+operador_unario:
 	'+'	
 	| '-'
 	| '*'
@@ -255,9 +260,8 @@ operador_unario_opcional:
 	| '?'
 	| '#'
 	| '&'
-	| %empty
 ;
-*/
+
 operador_exp_arit:
 	'+'	
 	| '-'
@@ -267,25 +271,17 @@ operador_exp_arit:
 	| '|'
 	| '^'
 	| '&'
-	| operador_relacional
 ;
 
 exp_logica:
-	operando_exp_arit operador_relacional operando_exp_arit
-	| operando_logico operador_logico operando_logico // que podem ser expressoes
+	expressao operador_relacional expressao
+	| expressao operador_logico expressao // que podem ser expressoes
 
-;
-
-operando_logico:
-	exp_logica
-	| TK_LIT_FALSE
-	| TK_LIT_TRUE
 ;
 
 operador_relacional:
 	TK_OC_EQ
 	| TK_OC_GE
-	| "<="
 	| TK_OC_NE
 	| '>'
 	| '<'
