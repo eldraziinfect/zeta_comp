@@ -1,9 +1,11 @@
 %{
+#include <stdio.h>
+#include "lex.yy.h";
 int yylex(void);
-void yyerror (char const *s);
-%}
 
-%expect 4
+void yyerror (char const *s);
+extern int get_line_number();
+%}
 
 %token TK_PR_INT
 %token TK_PR_FLOAT
@@ -249,7 +251,7 @@ operando:
 
 expressao_unaria:
 	operador_unario expressao_unaria
-	operando
+	| operando
 ;
 
 operador_unario:
@@ -321,3 +323,9 @@ const_opcional:
 	| %empty
 ;
 %%
+
+
+void yyerror (char const *s) {
+	char mensagem_erro[] = "Erro no token: %s na linha %d\n";
+	fprintf(stderr, mensagem_erro, yytext, get_line_number());
+}

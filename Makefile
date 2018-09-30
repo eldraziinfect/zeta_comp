@@ -9,20 +9,22 @@
 #
 
 
-
-etapa2: parser.tab.o
-	gcc -c -o etapa2 parser.tab.c -lfl
+etapa2: parser.tab.c
+	gcc parser.tab.o lex.yy.o main.c -o etapa2 -lfl
 	
 parser.tab.c: parser.y
 	bison -d -v parser.y
 
 etapa1: lex.yy.o main.o
-	gcc -o etapa1 lex.yy.o main.o -lfl
+	gcc -o etapa1 lex.yy.o main.o 
+
 main.o: main.c
-	gcc -c main.c -lfl
+	gcc -c -o main.c -lfl
+
 lex.yy.o: lex.yy.c
 	gcc -c lex.yy.c -lfl
+
 lex.yy.c: scanner.l
 	flex --header-file=lex.yy.h scanner.l 
 clean:
-	rm *.o lex.yy.c
+	rm *.o lex.yy.c parser.output parser.tab.c parser.tab.h etapa2.out
