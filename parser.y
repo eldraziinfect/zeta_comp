@@ -3,7 +3,7 @@ int yylex(void);
 void yyerror (char const *s);
 %}
 
-%expect 1
+%expect 4
 
 %token TK_PR_INT
 %token TK_PR_FLOAT
@@ -122,12 +122,16 @@ local_variavel_decla:
 ;
 
 literal:
-	TK_LIT_INT
-	| TK_LIT_FLOAT
+	operando_exp_arit_literal
 	| TK_LIT_FALSE
 	| TK_LIT_TRUE
 	| TK_LIT_CHAR
 	| TK_LIT_STRING
+;
+
+operando_exp_arit_literal:
+	TK_LIT_INT
+	| TK_LIT_FLOAT
 ;
 
 atribuicao:
@@ -176,8 +180,7 @@ argumento:
 	| '.'
 ;
 
-shift: "shift_debug"
-/*
+
 shift: 
 	TK_IDENTIFICADOR shift_simbol literal
 	| TK_IDENTIFICADOR '$' campo shift_simbol literal
@@ -188,14 +191,11 @@ shift:
 	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol expressao
 	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol expressao
 ;
-*/
 
-/*
 shift_simbol:
 	TK_OC_SL
 	| TK_OC_SR
 ;
-*/
 retorno:
 	TK_PR_RETURN expressao ';'
 ;
@@ -226,9 +226,7 @@ lista_comandos:
 	comando ',' lista_comandos ';' 
 	| comando ';'
 ;
-expressao: "expressao__debug" ;
 
-/*
 expressao: 
 	exp_aritmetica
 	| exp_logica
@@ -237,7 +235,7 @@ expressao:
 
 exp_aritmetica:
 	operando_exp_arit
-	| operador_unario_opcional operando_exp_arit operador_exp_arit operador_unario_opcional exp_aritmetica//recurs 
+	// operador_unario_opcional operando_exp_arit operador_exp_arit operador_unario_opcional exp_aritmetica//recurs 
 	| operando_exp_arit operador_exp_arit '(' exp_aritmetica ')'
 	// ternarios?
 ;
@@ -245,11 +243,10 @@ exp_aritmetica:
 operando_exp_arit:
 	TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
-	| TK_LIT_INT
-	| TK_LIT_FLOAT
+	| operando_exp_arit_literal
 	| chamada_funcao
 ;
-
+/*
 operador_unario_opcional:
 	'+'	
 	| '-'
@@ -260,7 +257,7 @@ operador_unario_opcional:
 	| '&'
 	| %empty
 ;
-
+*/
 operador_exp_arit:
 	'+'	
 	| '-'
@@ -309,7 +306,7 @@ operador_pipe:
 	TK_OC_FORWARD_PIPE
 	| TK_OC_BASH_PIPE
 ;
-*/
+
 tipo: 
 	TK_PR_FLOAT
 	| TK_PR_BOOL
