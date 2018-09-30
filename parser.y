@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "lex.yy.h";
+#include "lex.yy.h"
 int yylex(void);
 
 void yyerror (char const *s);
