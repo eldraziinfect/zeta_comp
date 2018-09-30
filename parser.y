@@ -3,6 +3,8 @@ int yylex(void);
 void yyerror (char const *s);
 %}
 
+%expect 1
+
 %token TK_PR_INT
 %token TK_PR_FLOAT
 %token TK_PR_BOOL
@@ -111,6 +113,7 @@ comando:
 	| shift
 	| bloco
 	| fluxo_controle
+	| case
 ;
 
 local_variavel_decla: 
@@ -173,6 +176,8 @@ argumento:
 	| '.'
 ;
 
+shift: "shift_debug"
+/*
 shift: 
 	TK_IDENTIFICADOR shift_simbol literal
 	| TK_IDENTIFICADOR '$' campo shift_simbol literal
@@ -183,12 +188,14 @@ shift:
 	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol expressao
 	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol expressao
 ;
+*/
 
+/*
 shift_simbol:
 	TK_OC_SL
 	| TK_OC_SR
 ;
-
+*/
 retorno:
 	TK_PR_RETURN expressao ';'
 ;
@@ -213,13 +220,15 @@ fluxo_controle:
 	| TK_PR_FOR '(' lista_comandos ':' expressao ':' lista_comandos ')' bloco
 	| TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco
 	| TK_PR_DO bloco TK_PR_WHILE '(' expressao ')'
+	| TK_PR_SWITCH '(' expressao ')' bloco
 ;
-
 lista_comandos:
-	comando ',' comando ';'
+	comando ',' lista_comandos ';' 
 	| comando ';'
 ;
+expressao: "expressao__debug" ;
 
+/*
 expressao: 
 	exp_aritmetica
 	| exp_logica
@@ -286,8 +295,8 @@ operador_relacional:
 ;
 
 operador_logico:
-	"&&"
-	| "||"
+	TK_OC_AND
+	| TK_OC_OR
 	| '!'
 ;
 
@@ -300,7 +309,7 @@ operador_pipe:
 	TK_OC_FORWARD_PIPE
 	| TK_OC_BASH_PIPE
 ;
-
+*/
 tipo: 
 	TK_PR_FLOAT
 	| TK_PR_BOOL
