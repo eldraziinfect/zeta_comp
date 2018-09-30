@@ -1,4 +1,4 @@
-*
+/*
 Função principal para realização da análise sintática.
 
 Este arquivo será posterioremente substituído, não acrescente nada.

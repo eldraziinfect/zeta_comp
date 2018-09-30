@@ -7,4 +7,4 @@ etapa2:
 	gcc -c lex.yy.c parser.tab.c -lfl
 	gcc parser.tab.o lex.yy.o main.c -o etapa2 -lfl
 clean:
-	rm *.o lex.yy.h parser.output parser.tab.c parser.tab.h 
+	rm *.o lex.yy.h lex.yy.c parser.output parser.tab.c parser.tab.h 
