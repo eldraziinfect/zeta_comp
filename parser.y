@@ -52,6 +52,7 @@ extern int get_line_number();
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+//nao estao resolvendo nada
 %left '+' '-'
 %left '/'
 %right '!' '#'
@@ -62,7 +63,7 @@ programa:
 	element
 ;
 
-element: 
+element: 	
 	global_variavel_decla element
 	| novos_tipos_decla element
 	| funcoes element
@@ -71,7 +72,8 @@ element:
 
 
 global_variavel_decla: 
-	TK_IDENTIFICADOR static_opcional tipo TK_IDENTIFICADOR
+	TK_IDENTIFICADOR static_opcional tipo ';'
+	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';'
 	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR 
 ;
 
@@ -327,6 +329,7 @@ const_opcional:
 	TK_PR_CONST
 	| %empty
 ;
+
 %%
 
 

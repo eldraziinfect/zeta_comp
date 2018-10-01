@@ -7,11 +7,14 @@
 */
 %{
 #include <string.h>
-#include "tokens.h"
+#include "parser.tab.h"
 
+#define YY_NO_UNPUT //elimina o warning: defined but not used eh seguro fazer isso?
+#define YY_NO_INPUT
 
 int num_lines = 1;
 int get_line_number();
+
 %}
 
 
