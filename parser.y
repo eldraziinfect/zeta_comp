@@ -52,6 +52,10 @@ extern int get_line_number();
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+%left '+' '-'
+%left '/'
+%right '!' '#'
+
 %%
 
 programa: 
