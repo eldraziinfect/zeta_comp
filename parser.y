@@ -54,8 +54,9 @@ extern int get_line_number();
 
 //nao estao resolvendo nada
 %left '+' '-'
-%left '/'
+%left '/' '-'
 %right '!' '#'
+%left "expressao" "operador_exp_arit"
 
 %%
 
@@ -67,14 +68,16 @@ element:
 	global_variavel_decla element
 	| novos_tipos_decla element
 	| funcoes element
+	| "teste"
 	| %empty
 ;
 
 
 global_variavel_decla: 
-	TK_IDENTIFICADOR static_opcional tipo ';'
-	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';'
-	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR 
+	TK_IDENTIFICADOR static_opcional tipo ';' 
+	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR ';'
+	TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
+	| TK_IDENTIFICADOR  '[' TK_LIT_INT ']' static_opcional TK_IDENTIFICADOR ';'
 ;
 
 novos_tipos_decla: 
@@ -240,6 +243,7 @@ expressao:
 	exp_aritmetica
 	| exp_logica
 	| exp_pipes
+	| exp_ternaria
 ;
 
 exp_aritmetica:
@@ -288,6 +292,9 @@ exp_logica:
 
 ;
 
+exp_ternaria:
+	"exp : exp ? exp"
+
 operador_relacional:
 	TK_OC_EQ
 	| TK_OC_GE
@@ -333,7 +340,7 @@ const_opcional:
 %%
 
 
-void yyerror (char const *s) {
+void yyerror (const char *s) {
 	char mensagem_erro[] = "Erro no token: %s na linha %d\n";
 	fprintf(stderr, mensagem_erro, yytext, get_line_number());
 }

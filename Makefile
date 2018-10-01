@@ -1,10 +1,30 @@
-#Makefile for Zeta_Comp João Vicente, Luis Miguel 2018-2
+CC := gcc
+CFLAGS := -Wall  -g #-Wextra
+LIB := -lfl
 
 
-etapa2: 
-	bison -d -v parser.y
-	flex --header-file=lex.yy.h scanner.l
-	gcc -c lex.yy.c parser.tab.c  -Wall
-	gcc parser.tab.o lex.yy.o main.c -o etapa2 -lfl -Wall
+
+all: etapa2
+
+###############################################################################
+# ETAPA 1
+###############################################################################
+etapa1:
+	@flex scanner.l
+	@$(CC) $(CFLAGS) lex.yy.c main.c $(LIB) -o etapa1
+
+
+###############################################################################
+# ETAPA 2
+###############################################################################
+etapa2:
+	@bison -d -v parser.y 
+	@flex --header-file=lex.yy.h scanner.l
+	@$(CC) $(CFLAGS) -c lex.yy.c parser.tab.c $(LIB)
+	@$(CC) $(CFLAGS) lex.yy.o parser.tab.o main.c $(LIB) -o etapa2
+
+###############################################################################
+
 clean:
-	rm *.o lex.yy.h lex.yy.c parser.output parser.tab.c parser.tab.h etapa2
+	@rm -rf lex.yy.c lex.yy.h parser.tab.c parser.tab.h etapa1 etapa2 *.tgz *.o \
+parser.output
