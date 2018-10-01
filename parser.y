@@ -53,8 +53,9 @@ extern int get_line_number();
 %token TOKEN_ERRO
 
 %left '+' '-'
-%left '/'
+%left '/' '-'
 %right '!' '#'
+%left "expressao" "operador_exp_arit"
 
 %%
 
