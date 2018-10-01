@@ -1,0 +1,241 @@
+#!/bin/bash
+echo 1 
+cat asl01 | ./etapa2
+echo 2 
+cat asl02 | ./etapa2
+echo 3 
+cat asl03 | ./etapa2
+echo 4 
+cat asl04 | ./etapa2
+echo 5 
+cat asl05 | ./etapa2
+echo 6 
+cat asl06 | ./etapa2
+echo 7 
+cat asl07 | ./etapa2
+echo 8 
+cat asl08 | ./etapa2
+echo 9 
+cat asl09 | ./etapa2
+echo 10 
+cat asl10 | ./etapa2
+echo 11 
+cat asl11 | ./etapa2
+echo 12 
+cat asl12 | ./etapa2
+echo 13 
+cat asl13 | ./etapa2
+echo 14 
+cat asl14 | ./etapa2
+echo 15 
+cat asl15 | ./etapa2
+echo 16 
+cat asl16 | ./etapa2
+echo 17 
+cat asl17 | ./etapa2
+echo 18 
+cat asl18 | ./etapa2
+echo 19 
+cat asl19 | ./etapa2
+echo 20 
+cat asl20 | ./etapa2
+echo 21 
+cat asl21 | ./etapa2
+echo 22 
+cat asl22 | ./etapa2
+echo 23 
+cat asl23 | ./etapa2
+echo 24 
+cat asl24 | ./etapa2
+echo 25 
+cat asl25 | ./etapa2
+echo 26 
+cat asl26 | ./etapa2
+echo 27 
+cat asl27 | ./etapa2
+echo 28 
+cat asl28 | ./etapa2
+echo 29 
+cat asl29 | ./etapa2
+echo 30 
+cat asl30 | ./etapa2
+echo 31 
+cat asl31 | ./etapa2
+echo 32 
+cat asl32 | ./etapa2
+echo 33 
+cat asl33 | ./etapa2
+echo 34 
+cat asl34 | ./etapa2
+echo 35 
+cat asl35 | ./etapa2
+echo 36 
+cat asl36 | ./etapa2
+echo 37 
+cat asl37 | ./etapa2
+echo 38 
+cat asl38 | ./etapa2
+echo 39 
+cat asl39 | ./etapa2
+echo 40 
+cat asl40 | ./etapa2
+echo 41 
+cat asl41 | ./etapa2
+echo 42 
+cat asl42 | ./etapa2
+echo 43 
+cat asl43 | ./etapa2
+echo 44 
+cat asl44 | ./etapa2
+echo 45 
+cat asl45 | ./etapa2
+echo 46 
+cat asl46 | ./etapa2
+echo 47 
+cat asl47 | ./etapa2
+echo 48 
+cat asl48 | ./etapa2
+echo 49 
+cat asl49 | ./etapa2
+echo 50 
+cat asl50 | ./etapa2
+echo 51 
+cat asl51 | ./etapa2
+echo 52 
+cat asl52 | ./etapa2
+echo 53 
+cat asl53 | ./etapa2
+echo 54 
+cat asl54 | ./etapa2
+echo 55 
+cat asl55 | ./etapa2
+echo 56 
+cat asl56 | ./etapa2
+echo 57 
+cat asl57 | ./etapa2
+echo 58 
+cat asl58 | ./etapa2
+echo 59 
+cat asl59 | ./etapa2
+echo 60 
+cat asl60 | ./etapa2
+echo 61 
+cat asl61 | ./etapa2
+echo 62 
+cat asl62 | ./etapa2
+echo 63 
+cat asl63 | ./etapa2
+echo 64 
+cat asl64 | ./etapa2
+echo 65 
+cat asl65 | ./etapa2
+echo 66 
+cat asl66 | ./etapa2
+echo 67 
+cat asl67 | ./etapa2
+echo 68 
+cat asl68 | ./etapa2
+echo 69 
+cat asl69 | ./etapa2
+echo 70 
+cat asl70 | ./etapa2
+echo 71 
+cat asl71 | ./etapa2
+echo 72 
+cat asl72 | ./etapa2
+echo 73 
+cat asl73 | ./etapa2
+echo 74 
+cat asl74 | ./etapa2
+echo 75 
+cat asl75 | ./etapa2
+echo 76 
+cat asl76 | ./etapa2
+echo 77 
+cat asl77 | ./etapa2
+echo 78 
+cat asl78 | ./etapa2
+echo 79 
+cat asl79 | ./etapa2
+echo 80 
+cat asl80 | ./etapa2
+echo 81 
+cat asl81 | ./etapa2
+echo 82 
+cat asl82 | ./etapa2
+echo 83 
+cat asl83 | ./etapa2
+echo 84 
+cat asl84 | ./etapa2
+echo 85 
+cat asl85 | ./etapa2
+echo 86 
+cat asl86 | ./etapa2
+echo 87 
+cat asl87 | ./etapa2
+echo 88 
+cat asl88 | ./etapa2
+echo 89 
+cat asl89 | ./etapa2
+echo 90 
+cat asl90 | ./etapa2
+echo 91 
+cat asl91 | ./etapa2
+echo 92 
+cat asl92 | ./etapa2
+echo 93 
+cat asl93 | ./etapa2
+echo 94 
+cat asl94 | ./etapa2
+echo 95 
+cat asl95 | ./etapa2
+echo 96 
+cat asl96 | ./etapa2
+echo 97 
+cat asl97 | ./etapa2
+echo 98 
+cat asl98 | ./etapa2
+echo 99 
+cat asl99 | ./etapa2
+echo 100 
+cat asl100 | ./etapa2
+echo 101 
+cat asl101 | ./etapa2
+echo 102 
+cat asl102 | ./etapa2
+echo 103 
+cat asl103 | ./etapa2
+echo 104 
+cat asl104 | ./etapa2
+echo 105 
+cat asl105 | ./etapa2
+echo 106 
+cat asl106 | ./etapa2
+echo 107 
+cat asl107 | ./etapa2
+echo 108 
+cat asl108 | ./etapa2
+echo 109 
+cat asl109 | ./etapa2
+echo 110 
+cat asl110 | ./etapa2
+echo 111 
+cat asl111 | ./etapa2
+echo 112 
+cat asl112 | ./etapa2
+echo 113 
+cat asl113 | ./etapa2
+echo 114 
+cat asl114 | ./etapa2
+echo 115 
+cat asl115 | ./etapa2
+echo 116 
+cat asl116 | ./etapa2
+echo 117 
+cat asl117 | ./etapa2
+echo 118 
+cat asl118 | ./etapa2
+echo 119 
+cat asl119 | ./etapa2
+echo 120 
+cat asl120 | ./etapa2
