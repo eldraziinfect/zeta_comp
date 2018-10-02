@@ -54,7 +54,7 @@ extern int get_line_number();
 
 //nao estao resolvendo nada
 %left '+' '-'
-%left '/' '-'
+%left '/' 
 %right '!' '#'
 %left "expressao" "operador_exp_arit"
 
@@ -68,7 +68,6 @@ element:
 	global_variavel_decla element
 	| novos_tipos_decla element
 	| funcoes element
-	| "teste"
 	| %empty
 ;
 
@@ -76,7 +75,7 @@ element:
 global_variavel_decla: 
 	TK_IDENTIFICADOR static_opcional tipo ';' 
 	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR ';'
-	TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
+	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
 	| TK_IDENTIFICADOR  '[' TK_LIT_INT ']' static_opcional TK_IDENTIFICADOR ';'
 ;
 
@@ -85,8 +84,8 @@ novos_tipos_decla:
 ;
 
 lista_campos:
-	encapsulamento TK_IDENTIFICADOR ':' lista_campos
-	| encapsulamento TK_IDENTIFICADOR
+	encapsulamento tipo TK_IDENTIFICADOR ':' lista_campos
+	| encapsulamento tipo TK_IDENTIFICADOR
 ;
 
 encapsulamento:
@@ -96,20 +95,24 @@ encapsulamento:
 ;
 
 funcoes: 
-	static_opcional tipo TK_IDENTIFICADOR lista_parametros bloco
+	static_opcional tipo TK_IDENTIFICADOR '(' lista_parametros ')' bloco
+	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR '(' lista_parametros ')' bloco 
 ;  
 
 lista_parametros: 
 	parametro ',' lista_parametros
 	| parametro
+	| %empty
 ;
 
 parametro:
 	const_opcional tipo TK_IDENTIFICADOR
+	| const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR
 ;
 
 bloco: 
 	'{' comandos '}'
+	| '{'  '}'
 ;
 
 comandos: 
@@ -122,15 +125,18 @@ comando:
 	| atribuicao
 	| entrada_saida_retorno
 	| chamada_funcao
-	| shift
-	| bloco
+	| shift //?
+	| bloco 
 	| fluxo_controle
-	| case
+	| case //?
 ;
 
 local_variavel_decla: 
 	static_opcional const_opcional tipo TK_IDENTIFICADOR
 	| static_opcional const_opcional tipo TK_IDENTIFICADOR TK_OC_LE literal
+	| static_opcional const_opcional tipo TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	| static_opcional const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR
+	
 ;
 
 literal:
@@ -294,6 +300,7 @@ exp_logica:
 
 exp_ternaria:
 	"exp : exp ? exp"
+;
 
 operador_relacional:
 	TK_OC_EQ
@@ -341,6 +348,6 @@ const_opcional:
 
 
 void yyerror (const char *s) {
-	char mensagem_erro[] = "Erro no token: %s na linha %d\n";
-	fprintf(stderr, mensagem_erro, yytext, get_line_number());
+	char mensagem_erro[] = "Erro no token: %s na linha %d. Sintaxe ou Overflow? %s\n";
+	fprintf(stderr, mensagem_erro, yytext, get_line_number(), s);
 }
