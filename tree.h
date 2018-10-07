@@ -8,7 +8,7 @@ typedef struct tree
 	tree* filho_esq;
 	tree* filho_mei;
 	tree* filho_dir;
-	tree* next;
+	tree* prox;
 } tree;
 
 
@@ -28,8 +28,8 @@ void cria_nodo_binario (int tipo, int valor1, int valor2)
 void cria_nodo_ternario (int tipo, int valor1, int valor2, int valor3)
 /// chama cria_nodo 3x
 
-void conecta_next(tree* atual)
-/// conecta no next do pai 
+void conecta_prox(tree* atual)
+/// conecta no prox do pai 
 
 void insere_no_pai (tree* atual, tree* pai, int posicao);
 /// kkk
