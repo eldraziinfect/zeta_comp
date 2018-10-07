@@ -22,3 +22,8 @@ return nodo;
 }
 
 
+void conecta_prox(tree* atual)
+{	atual->pai->prox = atual;
+}
+
+
