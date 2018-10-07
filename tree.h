@@ -19,13 +19,14 @@ tree* nova_tree ();
 tree* cria_nodo (int valor);
 /// faz malloc e seta o tipo
 
-void cria_nodo_unario (int tipo, int valor)
+void cria_nodo_unario (tree* atual, int tipo, int valor)
 /// chama cria_nodo
+/// insere o novo nodo no filho esquerdo
 
-void cria_nodo_binario (int tipo, int valor1, int valor2)
+void cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2)
 /// chama cria_nodo 2x
 
-void cria_nodo_ternario (int tipo, int valor1, int valor2, int valor3)
+void cria_nodo_ternario (tree* atual, int tipo, int valor1, int valor2, int valor3)
 /// chama cria_nodo 3x
 
 void conecta_prox(tree* atual)
