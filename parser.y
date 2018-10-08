@@ -53,10 +53,8 @@ extern int get_line_number();
 %token TOKEN_ERRO
 
 //nao estao resolvendo nada
-%left '+' '-'
 %left '/' '-'
-%right '!' '#'
-%left "expressao" "operador_exp_arit"
+%right '!' '#' ','
 
 %%
 
@@ -68,7 +66,6 @@ element:
 	global_variavel_decla element
 	| novos_tipos_decla element
 	| funcoes element
-	| "teste"
 	| %empty
 ;
 
@@ -79,6 +76,17 @@ global_variavel_decla:
 	TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
 	| TK_IDENTIFICADOR  '[' TK_LIT_INT ']' static_opcional TK_IDENTIFICADOR ';'
 ;
+
+static_opcional: 
+	TK_PR_STATIC
+	| %empty
+;
+
+const_opcional:
+	TK_PR_CONST
+	| %empty
+;
+tipo : "tipo" ;
 
 novos_tipos_decla: 
 	TK_PR_CLASS TK_IDENTIFICADOR '[' lista_campos ']' ';'
@@ -174,7 +182,7 @@ entrada_saida_retorno:
 ;
 
 lista_expressao: 
-	expressao ',' lista_expressao
+	lista_expressao ',' expressao
 	| expressao
 ;
 
@@ -239,13 +247,13 @@ lista_comandos:
 	| comando ';'
 ;
 
-expressao: 
+expressao: "expressao" /*
 	exp_aritmetica
 	| exp_logica
 	| exp_pipes
 	| exp_ternaria
-;
-
+*/;
+/*
 exp_aritmetica:
 	expressao_unaria
 	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
@@ -327,14 +335,7 @@ tipo:
 	| TK_PR_INT
 ;
 
-static_opcional: 
-	TK_PR_STATIC
-	| %empty
-	;
-
-const_opcional:
-	TK_PR_CONST
-	| %empty
+*/
 ;
 
 %%
