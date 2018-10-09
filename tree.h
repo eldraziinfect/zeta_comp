@@ -31,6 +31,7 @@ void cria_nodo_ternario (tree* atual, int tipo, int valor1, int valor2, int valo
 
 void conecta_prox(tree* atual)
 /// conecta no prox do pai 
+// útil para o encadeamento de elements
 
 void insere_no_pai (tree* atual, tree* pai, int posicao);
 /// kkk
