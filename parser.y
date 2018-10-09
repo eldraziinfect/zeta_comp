@@ -73,7 +73,7 @@ element:
 global_variavel_decla: 
 	TK_IDENTIFICADOR static_opcional tipo ';' 
 	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR ';'
-	TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
+	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
 	| TK_IDENTIFICADOR  '[' TK_LIT_INT ']' static_opcional TK_IDENTIFICADOR ';'
 ;
 
@@ -247,13 +247,14 @@ lista_comandos:
 	| comando ';'
 ;
 
-expressao: "expressao" /*
+expressao: 
 	exp_aritmetica
+/*
 	| exp_logica
 	| exp_pipes
 	| exp_ternaria
 */;
-/*
+
 exp_aritmetica:
 	expressao_unaria
 	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
@@ -264,9 +265,11 @@ exp_aritmetica:
 operando:
 	TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
-	| operando_exp_arit_literal
+	| literal
 	| chamada_funcao
 ;
+
+
 
 expressao_unaria:
 	operador_unario expressao_unaria
@@ -293,7 +296,7 @@ operador_exp_arit:
 	| '^'
 	| '&'
 ;
-
+/*
 exp_logica:
 	expressao operador_relacional expressao
 	| expressao operador_logico expressao // que podem ser expressoes
