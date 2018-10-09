@@ -87,6 +87,7 @@ const_opcional:
 	TK_PR_CONST
 	| %empty
 ;
+
 tipo : "tipo" ;
 
 novos_tipos_decla: 
@@ -135,11 +136,15 @@ comando:
 	| atribuicao
 	| entrada_saida_retorno
 	| chamada_funcao
-	| shift //?
+	| shift 
 	| bloco 
-	| fluxo_controle
-	| case //?
+	| "fluxo_controle"
+	| case 
+	| retorno
+	| break
+	| continue
 ;
+expressao: "expressao";
 
 local_variavel_decla: 
 	static_opcional const_opcional tipo TK_IDENTIFICADOR
@@ -169,12 +174,12 @@ atribuicao:
 
 atribuicao_primitivo:
 	TK_IDENTIFICADOR '=' expressao
-	| '[' expressao ']' '=' expressao
+	| TK_IDENTIFICADOR '[' expressao ']' '=' expressao
 ;
 
 atribuicao_tipo_usuario:
 	TK_IDENTIFICADOR '$' campo '=' expressao
-	| '[' expressao ']' '$' campo '=' expressao
+	| TK_IDENTIFICADOR '[' expressao ']' '$' campo '=' expressao
 ;
 
 campo: 
@@ -184,9 +189,6 @@ campo:
 entrada_saida_retorno:
 	TK_PR_INPUT expressao
 	|TK_PR_OUTPUT lista_expressao
-	| retorno
-	| break
-	| continue
 ;
 
 lista_expressao: 
@@ -239,7 +241,7 @@ continue:
 case:
 	TK_PR_CASE TK_LIT_INT ':'
 ;
-
+/*
 
 fluxo_controle: 
 	TK_PR_IF '(' expressao ')' TK_PR_THEN bloco
@@ -262,7 +264,7 @@ expressao:
 	| exp_pipes
 	| exp_ternaria
 */;
-
+/*
 exp_aritmetica:
 	expressao_unaria
 	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
@@ -348,7 +350,7 @@ tipo:
 ;
 
 */
-;
+
 
 %%
 
