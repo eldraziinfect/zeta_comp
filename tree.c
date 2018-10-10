@@ -22,16 +22,26 @@ return nodo;
 }
 
 
-void conecta_prox(tree* atual)
-{	atual->pai->prox = atual;
+void conecta_prox(tree* atual, tree* pai)
+{	atual->pai = pai;
+	pai->prox = atual;
+	pai->num_filhos+=1;
 }
 
-void conecta_esq(tree* atual)
-{	atual->pai->esq = atual;
+void conecta_meio(tree* atual, tree* pai)
+{	atual->pai = pai;
+	pai->prox = atual;
+	pai->num_filhos+=1;
+}
+
+void conecta_esq(tree* atual, tree* pai)
+{	atual->pai = pai;
+	pai->filho_esq = atual;
+	pai->num_filhos+=1;
 }
 
 
-tree* cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2)
+tree* cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2) // and so on
 {	tree *esquerdo = cria_nodo(valor1);
 	tree *meio = cria_nodo(valor2);
 	tree *novo = cria_nodo(tipo);
@@ -39,8 +49,9 @@ tree* cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2)
 	novo->filho_esq = esquerdo;
 	novo->filho_mei = meio;
 	novo->num_filhos = 2;
+	//não precisa de set null pois já está na função de criação
 
-return novo;	
+return novo;
 }
 /* SUBSTITUIR POR FUNÇÕES ESPECÍFICAS
 void conectanodo(tree *pai, tree *filho, int modo)
@@ -50,7 +61,7 @@ void conectanodo(tree *pai, tree *filho, int modo)
 }
 */
 
-//Como conectar o nodo no pai, durante o parsing?
+//Como conectar o nodo no pai durante o parsing?
 // *> precisa dos ponteiros para os dois nodos! 
 
 

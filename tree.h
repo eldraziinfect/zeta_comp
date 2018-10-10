@@ -29,11 +29,11 @@ void cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2)
 void cria_nodo_ternario (tree* atual, int tipo, int valor1, int valor2, int valor3)
 /// chama cria_nodo 3x
 
-void conecta_prox(tree* atual)
+void conecta_prox (tree* atual, tree* pai)
 /// conecta no prox do pai 
 // útil para o encadeamento de elements
 
-void insere_no_pai (tree* atual, tree* pai, int posicao);
+void insere_no_pai (tree* atual, tree* pai, int posicao); // obsoleto
 /// kkk
 
 void libera (tree* nodo);
@@ -42,6 +42,8 @@ void libera (tree* nodo);
 
 void print_debug();
 ///obrigatória: imprime a árvore.
+/// Como saber aonde começa a árvore? acho que um loop indo até o nodo sem pai funciona
+// mas tem que começar em algum lugar...
 
 void descompila();
 /// obrigatória: desfaz a árvore e refaz o código.
