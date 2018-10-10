@@ -12,24 +12,23 @@ typedef struct tree
 } tree;
 
 
-
 tree* nova_tree ();
 /// cria uma árvore nova
 
 tree* cria_nodo (int valor);
 /// faz malloc e seta o tipo
 
-void cria_nodo_unario (tree* atual, int tipo, int valor)
+tree* cria_nodo_unario (tree* atual, int tipo, int valor);
 /// chama cria_nodo
 /// insere o novo nodo no filho esquerdo
 
-void cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2)
+tree* cria_nodo_binario (tree* atual, int tipo, int valor1, int valor2);
 /// chama cria_nodo 2x
 
-void cria_nodo_ternario (tree* atual, int tipo, int valor1, int valor2, int valor3)
+tree* cria_nodo_ternario (tree* atual, int tipo, int valor1, int valor2, int valor3);
 /// chama cria_nodo 3x
 
-void conecta_prox (tree* atual, tree* pai)
+void conecta_prox (tree* atual, tree* pai);
 /// conecta no prox do pai 
 // útil para o encadeamento de elements
 

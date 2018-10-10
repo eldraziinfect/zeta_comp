@@ -52,10 +52,16 @@ extern int get_line_number();
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-//nao estao resolvendo nada
-%left '/' '-'
-%right '!' '#' ','
-
+//mais um teste aqui
+%left '+'
+%left '-'
+%left '*'
+%left '/'
+%union {
+  comp_dict_item_t *valor_lexico;
+  comp_tree_t *nodo_arvore;
+  int type;
+}
 
 %%
 
@@ -64,10 +70,10 @@ programa:
 ;
 
 element: 	
-	global_variavel_decla element
-	| novos_tipos_decla element
-	| funcoes element
-	| %empty
+	global_variavel_decla element 	{$$ = $2;}
+	| novos_tipos_decla element 	{$$ = $2;}
+	| funcoes element 		{$$ = $2;}
+	| %empty 			{$$ = NULL;}
 ;
 
 
@@ -106,10 +112,13 @@ encapsulamento:
 ;
 
 funcoes: 
-	static_opcional tipo TK_IDENTIFICADOR '(' lista_parametros ')' bloco
-	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR '(' lista_parametros ')' bloco 
-;  
+	header '(' lista_parametros ')' bloco //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} ctz que isso tá errado, tem que começar nas folhas.
+ ;  
 
+header:
+	static_opcional tipo TK_IDENTIFICADOR {$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
+	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR {$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
+;
 lista_parametros: 
 	parametro ',' lista_parametros
 	| parametro
