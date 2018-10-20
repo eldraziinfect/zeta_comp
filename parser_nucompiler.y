@@ -90,6 +90,38 @@ Element: GVarDeclaration Element
 | %empty 		
 ;
 
+
+GVarDeclaration: Static Type TK_IDENTIFICADOR ArraySize ';' 
+;
+
+Static: TK_PR_STATIC
+| %empty	
+;
+
+
+Type: PrimType
+| TK_IDENTIFICADOR
+;
+
+PrimType: TK_PR_FLOAT
+| TK_PR_INT
+| TK_PR_CHAR
+| TK_PR_STRING
+| TK_PR_BOOL
+;
+
+TypeDeclaration: TK_PR_CLASS TK_IDENTIFICADOR '[' FieldList ']' ';'
+;
+
+FieldList: Encapsulation PrimType TK_IDENTIFICADOR ':' FieldList
+| Encapsulation PrimType TK_IDENTIFICADOR
+;
+
+Encapsulation: TK_PR_PRIVATE
+| TK_PR_PUBLIC
+| TK_PR_PROTECTED
+;
+
 FunDeclaration: Header CommandBlock
 ;
 
@@ -97,20 +129,15 @@ Header: Static Type TK_IDENTIFICADOR '(' EntryParams ')'
 ;
 
 EntryParams: Const Type TK_IDENTIFICADOR ',' EntryParams	
-
-
 | Const Type TK_IDENTIFICADOR								
 ;
 
-CommandBlock: '{' Scope Commands NoScope '}' 
-| '{' Scope NoScope '}'
+// marcador 1
+
+CommandBlock: '{'  Commands  '}' 
+| '{' '}'
 ;
 
-Scope : %empty
-;
-
-NoScope : %empty 
-;
 
 Commands: Command ';' Commands 
 | Command	';'
@@ -118,23 +145,44 @@ Commands: Command ';' Commands
 
 
 Command: VarDeclaration
-| FunctionCall 
 | Attribution
+| FunctionCall 
 | Input	
 | Output 
-| ShiftExp 
 | Return
-| Break	
-| Continue
+| ShiftExp 
+| CommandBlock
 | If	
 | While	
 | For	
 | ForEach
 | Switch
-| CommandBlock
 | PipeExpr	
-| Case 		
+| Case 	
+| Break	
+| Continue	
 ;
+
+
+VarDeclaration: TK_PR_STATIC VarDeclaration1
+| VarDeclaration1				
+;
+
+VarDeclaration1: TK_PR_CONST VarDeclaration2
+| VarDeclaration2
+;
+
+VarDeclaration2: TK_IDENTIFICADOR TK_IDENTIFICADOR
+| PrimType TK_IDENTIFICADOR RightAttr	
+;
+
+
+RightAttr: TK_OC_LE TK_IDENTIFICADOR
+| TK_OC_LE Literal			
+| %empty 				
+;
+
+// marcador 2
 
 Case : TK_PR_CASE Literal ':' CommandBlock
 
@@ -262,22 +310,6 @@ CallParams: Expression ',' CallParams
 | Expression
 ;
 
-VarDeclaration: TK_PR_STATIC VarDeclaration1
-| VarDeclaration1				
-;
-
-VarDeclaration1: TK_PR_CONST VarDeclaration2
-| VarDeclaration2
-;
-
-VarDeclaration2: TK_IDENTIFICADOR TK_IDENTIFICADOR
-| PrimType TK_IDENTIFICADOR RightAttr	
-;
-
-RightAttr: TK_OC_LE TK_IDENTIFICADOR
-| TK_OC_LE Literal			
-| %empty 				
-;
 
 Literal: TK_LIT_INT
 | TK_LIT_FLOAT	
@@ -291,24 +323,7 @@ Const: TK_PR_CONST
 | %empty
 ;
 
-TypeDeclaration: TK_PR_CLASS TK_IDENTIFICADOR '[' FieldList ']' ';'
-;
 
-FieldList: Encapsulation PrimType TK_IDENTIFICADOR ':' FieldList
-| Encapsulation PrimType TK_IDENTIFICADOR
-;
-
-Encapsulation: TK_PR_PRIVATE
-| TK_PR_PUBLIC
-| TK_PR_PROTECTED
-;
-
-GVarDeclaration: Static Type TK_IDENTIFICADOR ArraySize ';' 
-;
-
-Static: TK_PR_STATIC
-| %empty	
-;
 
 ArraySize: '[' TK_LIT_INT ']'
 | %empty
@@ -318,16 +333,6 @@ ArraySizeExp: '[' Expression ']'
 | %empty
 ;
 
-Type: PrimType
-| TK_IDENTIFICADOR
-;
-
-PrimType: TK_PR_FLOAT
-| TK_PR_INT
-| TK_PR_CHAR
-| TK_PR_STRING
-| TK_PR_BOOL
-;
 
 %%
 

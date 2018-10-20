@@ -57,6 +57,7 @@ extern int get_line_number();
 %left '-'
 %left '*'
 %left '/'
+
 %union {
   comp_dict_item_t *valor_lexico;
   comp_tree_t *nodo_arvore;
@@ -70,18 +71,16 @@ programa:
 ;
 
 element: 	
-	global_variavel_decla element 	{$$ = $2;}
-	| novos_tipos_decla element 	{$$ = $2;}
-	| funcoes element 		{$$ = $2;}
-	| %empty 			{$$ = NULL;}
+	global_variavel_decla element 	//{$$ = $2;}
+	| novos_tipos_decla element 	//{$$ = $2;}
+	| funcoes element 		//{$$ = $2;}
+	| %empty 			//{$$ = NULL;}
 ;
 
 
 global_variavel_decla: 
 	TK_IDENTIFICADOR static_opcional tipo ';' 
-	| TK_IDENTIFICADOR static_opcional TK_IDENTIFICADOR ';'
 	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
-	| TK_IDENTIFICADOR  '[' TK_LIT_INT ']' static_opcional TK_IDENTIFICADOR ';'
 ;
 
 static_opcional: 
@@ -94,15 +93,26 @@ const_opcional:
 	| %empty
 ;
 
-tipo : "tipo" ;
+tipo : 
+	tipo_primitivo 
+	| TK_IDENTIFICADOR
+;
+
+tipo_primitivo:
+	TK_PR_INT
+	| TK_PR_FLOAT
+	| TK_PR_BOOL
+	| TK_PR_CHAR
+	| TK_PR_STRING
+;
 
 novos_tipos_decla: 
 	TK_PR_CLASS TK_IDENTIFICADOR '[' lista_campos ']' ';'
 ;
 
 lista_campos:
-	encapsulamento tipo TK_IDENTIFICADOR ':' lista_campos
-	| encapsulamento tipo TK_IDENTIFICADOR
+	encapsulamento tipo_primitivo TK_IDENTIFICADOR ':' lista_campos
+	| encapsulamento tipo_primitivo TK_IDENTIFICADOR
 ;
 
 encapsulamento:
@@ -112,23 +122,27 @@ encapsulamento:
 ;
 
 funcoes: 
-	header '(' lista_parametros ')' bloco //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} ctz que isso tá errado, tem que começar nas folhas.
+	header '(' lista_parametros ')' bloco //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} ctz que isso tá errado, tem que começar nas folhas
+	| header '(' ')' bloco
  ;  
 
 header:
-	static_opcional tipo TK_IDENTIFICADOR {$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
-	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR {$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
+	static_opcional tipo TK_IDENTIFICADOR //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
+	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
 ;
 lista_parametros: 
-	parametro ',' lista_parametros
-	| parametro
-	| %empty
+	parametro ',' lista_parametros 	//{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
+	| parametro 			//{$$ = cria_nodo_unario(NULL, $1, $3, $5);} 
 ;
 
 parametro:
-	const_opcional tipo TK_IDENTIFICADOR
-	| const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR
+	const_opcional tipo TK_IDENTIFICADOR			{}
+	| const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR	{}
 ;
+
+
+// marcador 1
+
 
 bloco: 
 	'{' comandos '}'
@@ -149,7 +163,6 @@ comando:
 	| bloco 
 	| "fluxo_controle"
 	| case 
-	| retorno
 	| break
 	| continue
 ;
@@ -157,11 +170,12 @@ expressao: "expressao";
 
 local_variavel_decla: 
 	static_opcional const_opcional tipo TK_IDENTIFICADOR
-	| static_opcional const_opcional tipo TK_IDENTIFICADOR TK_OC_LE literal
-	| static_opcional const_opcional tipo TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
-	| static_opcional const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR
+	| static_opcional const_opcional tipo_primitivo TK_IDENTIFICADOR TK_OC_LE literal
+	| static_opcional const_opcional tipo_primitivo TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
 	
 ;
+
+/// marcador 2
 
 literal:
 	operando_exp_arit_literal
@@ -250,7 +264,6 @@ continue:
 case:
 	TK_PR_CASE TK_LIT_INT ':'
 ;
-/*
 
 fluxo_controle: 
 	TK_PR_IF '(' expressao ')' TK_PR_THEN bloco
@@ -268,12 +281,11 @@ lista_comandos:
 
 expressao: 
 	exp_aritmetica
-/*
 	| exp_logica
 	| exp_pipes
 	| exp_ternaria
-*/;
-/*
+;
+
 exp_aritmetica:
 	expressao_unaria
 	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
