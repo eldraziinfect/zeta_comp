@@ -58,7 +58,7 @@ extern int get_line_number();
 %left '*'
 %left '/'
 %right '&'
-%right '*'
+//%right '*'
 %right '#'
 
 %union {
@@ -131,7 +131,6 @@ funcoes:
 
 header:
 	static_opcional tipo TK_IDENTIFICADOR //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
-	| static_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
 ;
 lista_parametros: 
 	parametro ',' lista_parametros 	//{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
@@ -232,15 +231,17 @@ argumento:
 ;
 
 shift: 
-	TK_IDENTIFICADOR shift_simbol TK_LIT_INT
-	| TK_IDENTIFICADOR '$' campo shift_simbol TK_LIT_INT
-	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol TK_LIT_INT
-	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol TK_LIT_INT
-	| TK_IDENTIFICADOR shift_simbol expressao
+	TK_IDENTIFICADOR shift_simbol expressao
 	| TK_IDENTIFICADOR '$' campo shift_simbol expressao
 	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol expressao
 	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol expressao
 ;
+// shift: 
+//	TK_IDENTIFICADOR shift_simbol TK_LIT_INT
+//	| TK_IDENTIFICADOR '$' campo shift_simbol TK_LIT_INT
+//	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol TK_LIT_INT
+//	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol TK_LIT_INT
+//;  //EXPRESSAO PODE SER UM LITERAL INTEIRO
 
 shift_simbol:
 	TK_OC_SL
