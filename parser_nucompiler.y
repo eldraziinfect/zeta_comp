@@ -94,10 +94,10 @@ Element: GVarDeclaration Element
 GVarDeclaration: Static Type TK_IDENTIFICADOR ArraySize ';' 
 ;
 
+
 Static: TK_PR_STATIC
 | %empty	
 ;
-
 
 Type: PrimType
 | TK_IDENTIFICADOR
@@ -108,6 +108,10 @@ PrimType: TK_PR_FLOAT
 | TK_PR_CHAR
 | TK_PR_STRING
 | TK_PR_BOOL
+;
+
+ArraySize: '[' TK_LIT_INT ']'
+| %empty
 ;
 
 TypeDeclaration: TK_PR_CLASS TK_IDENTIFICADOR '[' FieldList ']' ';'
@@ -132,6 +136,11 @@ EntryParams: Const Type TK_IDENTIFICADOR ',' EntryParams
 | Const Type TK_IDENTIFICADOR								
 ;
 
+Const: TK_PR_CONST
+| %empty
+;
+
+
 // marcador 1
 
 CommandBlock: '{'  Commands  '}' 
@@ -142,27 +151,6 @@ CommandBlock: '{'  Commands  '}'
 Commands: Command ';' Commands 
 | Command	';'
 ;
-
-
-Command: VarDeclaration
-| Attribution
-| FunctionCall 
-| Input	
-| Output 
-| Return
-| ShiftExp 
-| CommandBlock
-| If	
-| While	
-| For	
-| ForEach
-| Switch
-| PipeExpr	
-| Case 	
-| Break	
-| Continue	
-;
-
 
 VarDeclaration: TK_PR_STATIC VarDeclaration1
 | VarDeclaration1				
@@ -182,9 +170,60 @@ RightAttr: TK_OC_LE TK_IDENTIFICADOR
 | %empty 				
 ;
 
-// marcador 2
+/// marcador 2
+
+Literal: TK_LIT_INT
+| TK_LIT_FLOAT	
+| TK_LIT_FALSE	
+| TK_LIT_TRUE	
+| TK_LIT_CHAR	
+| TK_LIT_STRING	
+;
+
+
+Attribution: TK_IDENTIFICADOR '=' Expression
+| TK_IDENTIFICADOR '[' Expression ']' '=' Expression															
+| TK_IDENTIFICADOR '.' TK_IDENTIFICADOR '=' Expression	
+;
+
+
+/// marcador 3
+
+FunctionCall: TK_IDENTIFICADOR '(' CallParams ')'
+| TK_IDENTIFICADOR '(' ')'
+;
+
+CallParams: Expression ',' CallParams
+| '.' ',' CallParams
+| '.'
+| Expression
+;
+
+ShiftExp: TK_IDENTIFICADOR TK_OC_SR TK_LIT_INT	
+| TK_IDENTIFICADOR TK_OC_SL TK_LIT_INT		
+;
+
+Return: TK_PR_RETURN Expression	
+;
+		
+Break: TK_PR_BREAK
+;
+
+Continue: TK_PR_CONTINUE
+;
 
 Case : TK_PR_CASE Literal ':' CommandBlock
+;
+
+Input: TK_PR_INPUT Expression
+;
+
+Output: TK_PR_OUTPUT OutputList
+;
+
+OutputList: Expression ',' OutputList
+| Expression
+;
 
 If: TK_PR_IF '(' Expression ')' TK_PR_THEN CommandBlock	
 | TK_PR_IF '(' Expression ')' TK_PR_THEN CommandBlock TK_PR_ELSE CommandBlock  ;
@@ -196,9 +235,12 @@ While: TK_PR_WHILE '(' Expression ')' TK_PR_DO CommandBlock
 For: TK_PR_FOR Scope '(' ForList ':' Expression ':' ForList ')' '{' Commands NoScope '}'
 ;
 
-ForList: CommandFor ',' ForList		
-| CommandFor				
+ForEach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' ForEachList ')' CommandBlock	
 ;
+
+Switch: TK_PR_SWITCH '(' Expression ')' CommandBlock		
+;
+
 
 CommandFor: VarDeclaration 	
 | FunctionCall 	
@@ -216,44 +258,15 @@ CommandFor: VarDeclaration
 | PipeExpr 	
 ;
 
-ForEach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' ForEachList ')' CommandBlock	
-;
-
 ForEachList: Expression ',' ForEachList				
 | Expression							
 ;
 
-Switch: TK_PR_SWITCH '(' Expression ')' CommandBlock		
+ForList: CommandFor ',' ForList		
+| CommandFor				
 ;
 
-Return: TK_PR_RETURN Expression	
-;
-		
-Break: TK_PR_BREAK
-;
-
-Continue: TK_PR_CONTINUE
-;
-
-ShiftExp: TK_IDENTIFICADOR TK_OC_SR TK_LIT_INT	
-| TK_IDENTIFICADOR TK_OC_SL TK_LIT_INT		
-;
-
-Input: TK_PR_INPUT Expression
-;
-
-Output: TK_PR_OUTPUT OutputList
-;
-
-OutputList: Expression ',' OutputList
-| Expression
-;
-
-Attribution: TK_IDENTIFICADOR '=' Expression
-| TK_IDENTIFICADOR '[' Expression ']' '=' Expression															
-| TK_IDENTIFICADOR '.' TK_IDENTIFICADOR '=' Expression	
-;
-
+///marcador 4 - exp
 Expression: AritExpr
 | LogExpr		
 | PipeExpr		
@@ -270,6 +283,16 @@ AritExpr: AritExpr '+' AritExpr
 | Operands			
 ;
 
+Operands: TK_IDENTIFICADOR ArraySizeExp 
+| Literal	
+| FunctionCall	
+;
+
+ArraySizeExp: '[' Expression ']' 
+| %empty
+;
+
+/// marcador 5 : log
 LogExpr:  AritExpr TK_OC_LE AritExpr 
 | AritExpr TK_OC_GE AritExpr		
 | AritExpr TK_OC_EQ AritExpr		
@@ -284,6 +307,7 @@ NewLogExpr: LogExpr TK_OC_AND LogExpr
 | '(' NewLogExpr ')'			
 ;
 
+///marcador 6 -pipe
 PipeExpr:  FunctionCall PipeTokens PipeRecursion 
 ;
 
@@ -295,45 +319,6 @@ PipeTokens: TK_OC_PIP
 | TK_OC_OOR		
 ;
 
-Operands: TK_IDENTIFICADOR ArraySizeExp 
-| Literal	
-| FunctionCall	
-;
+///marcador 7
 
-FunctionCall: TK_IDENTIFICADOR '(' CallParams ')'
-| TK_IDENTIFICADOR '(' ')'
-;
-
-CallParams: Expression ',' CallParams
-| '.' ',' CallParams
-| '.'
-| Expression
-;
-
-
-Literal: TK_LIT_INT
-| TK_LIT_FLOAT	
-| TK_LIT_FALSE	
-| TK_LIT_TRUE	
-| TK_LIT_CHAR	
-| TK_LIT_STRING	
-;
-
-Const: TK_PR_CONST
-| %empty
-;
-
-
-
-ArraySize: '[' TK_LIT_INT ']'
-| %empty
-;
-
-ArraySizeExp: '[' Expression ']' 
-| %empty
-;
-
-
-%%
-
-	
+%%	

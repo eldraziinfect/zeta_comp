@@ -57,6 +57,9 @@ extern int get_line_number();
 %left '-'
 %left '*'
 %left '/'
+%right '&'
+%right '*'
+%right '#'
 
 %union {
   comp_dict_item_t *valor_lexico;
@@ -157,11 +160,12 @@ comandos:
 comando: 
 	local_variavel_decla
 	| atribuicao
-	| entrada_saida_retorno
+	| entrada_saida
+	| retorno
 	| chamada_funcao
 	| shift 
 	| bloco 
-	| "fluxo_controle"
+	| fluxo_controle
 	| case 
 	| break
 	| continue
@@ -189,6 +193,7 @@ operando_exp_arit_literal:
 	| TK_LIT_FLOAT
 ;
 
+
 atribuicao:
 	atribuicao_primitivo
 	| atribuicao_tipo_usuario
@@ -208,19 +213,12 @@ campo:
 	TK_IDENTIFICADOR
 ;
 
-entrada_saida_retorno:
-	TK_PR_INPUT expressao
-	|TK_PR_OUTPUT lista_expressao
-;
 
-expressao: "expressao";
-lista_expressao: 
-	lista_expressao ',' expressao
-	| expressao
-;
+/// marcador 3
 
 chamada_funcao: 
 	TK_IDENTIFICADOR '(' lista_argumentos ')'
+	| TK_IDENTIFICADOR '(' ')'
 ;
 
 lista_argumentos:
@@ -233,12 +231,11 @@ argumento:
 	| '.'
 ;
 
-
 shift: 
-	TK_IDENTIFICADOR shift_simbol literal
-	| TK_IDENTIFICADOR '$' campo shift_simbol literal
-	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol literal
-	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol literal
+	TK_IDENTIFICADOR shift_simbol TK_LIT_INT
+	| TK_IDENTIFICADOR '$' campo shift_simbol TK_LIT_INT
+	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol TK_LIT_INT
+	| TK_IDENTIFICADOR '[' expressao ']' '$' campo shift_simbol TK_LIT_INT
 	| TK_IDENTIFICADOR shift_simbol expressao
 	| TK_IDENTIFICADOR '$' campo shift_simbol expressao
 	| TK_IDENTIFICADOR '[' expressao ']' shift_simbol expressao
@@ -249,6 +246,7 @@ shift_simbol:
 	TK_OC_SL
 	| TK_OC_SR
 ;
+
 retorno:
 	TK_PR_RETURN expressao ';'
 ;
@@ -265,20 +263,50 @@ case:
 	TK_PR_CASE TK_LIT_INT ':'
 ;
 
+entrada_saida:
+	TK_PR_INPUT expressao
+	| TK_PR_OUTPUT lista_expressao
+;
+
+
 fluxo_controle: 
 	TK_PR_IF '(' expressao ')' TK_PR_THEN bloco
 	| TK_PR_IF '(' expressao ')' TK_PR_THEN bloco TK_PR_ELSE bloco
+	
 	| TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' lista_expressao ')' bloco
+	
 	| TK_PR_FOR '(' lista_comandos ':' expressao ':' lista_comandos ')' bloco
+	
 	| TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco
+	
 	| TK_PR_DO bloco TK_PR_WHILE '(' expressao ')'
+	
 	| TK_PR_SWITCH '(' expressao ')' bloco
 ;
-lista_comandos:
-	comando ',' lista_comandos ';' 
-	| comando ';'
+
+lista_expressao: 
+	expressao ',' lista_expressao
+	| expressao
 ;
 
+lista_comandos:
+	comando_for ',' lista_comandos ';' 
+	| comando_for ';'
+;
+
+comando_for:
+	local_variavel_decla
+	| atribuicao
+	| retorno
+	| chamada_funcao
+	| shift 
+	| bloco 
+	| fluxo_controle
+	| break
+	| continue
+;
+
+///marcador 4 -exp
 expressao: 
 	exp_aritmetica
 	| exp_logica
@@ -290,7 +318,11 @@ exp_aritmetica:
 	expressao_unaria
 	| expressao_unaria operador_exp_arit  exp_aritmetica //recurs 
 	| '(' exp_aritmetica ')'
-	// ternarios?
+;
+
+expressao_unaria:
+	operando
+	| operador_unario expressao_unaria
 ;
 
 operando:
@@ -298,13 +330,6 @@ operando:
 	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
 	| literal
 	| chamada_funcao
-;
-
-
-
-expressao_unaria:
-	operador_unario expressao_unaria
-	| operando
 ;
 
 operador_unario:
@@ -327,20 +352,19 @@ operador_exp_arit:
 	| '^'
 	| '&'
 ;
-/*
+
+/// marcador 5 : log
 exp_logica:
-	expressao operador_relacional expressao
-	| expressao operador_logico expressao // que podem ser expressoes
+	exp_aritmetica operador_relacional exp_aritmetica
+	| expressao operador_logico expressao 
+	| '(' exp_logica ')'
 
-;
-
-exp_ternaria:
-	"exp : exp ? exp"
 ;
 
 operador_relacional:
 	TK_OC_EQ
 	| TK_OC_GE
+	| TK_OC_LE
 	| TK_OC_NE
 	| '>'
 	| '<'
@@ -352,6 +376,7 @@ operador_logico:
 	| '!'
 ;
 
+///marcador 6 -pipe
 exp_pipes:
 	chamada_funcao operador_pipe exp_pipes
 	| chamada_funcao operador_pipe chamada_funcao
@@ -362,16 +387,12 @@ operador_pipe:
 	| TK_OC_BASH_PIPE
 ;
 
-tipo: 
-	TK_PR_FLOAT
-	| TK_PR_BOOL
-	| TK_PR_CHAR
-	| TK_PR_STRING
-	| TK_PR_INT
+///marcador 7
+
+exp_ternaria:
+	"exp" ':' "exp" '?' "exp"
+	| '(' exp_ternaria ')'
 ;
-
-*/
-
 
 %%
 
