@@ -166,7 +166,6 @@ comando:
 	| break
 	| continue
 ;
-expressao: "expressao";
 
 local_variavel_decla: 
 	static_opcional const_opcional tipo TK_IDENTIFICADOR
@@ -214,6 +213,7 @@ entrada_saida_retorno:
 	|TK_PR_OUTPUT lista_expressao
 ;
 
+expressao: "expressao";
 lista_expressao: 
 	lista_expressao ',' expressao
 	| expressao
