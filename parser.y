@@ -55,11 +55,15 @@ extern int get_line_number();
 //mais um teste aqui
 %left '+'
 %left '-'
-%left '*'
 %left '/'
+
+%right TK_IDENTIFICADOR
+
 %right '&'
-//%right '*'
+//%left '*'
+%right '*'
 %right '#'
+
 
 %union {
   comp_dict_item_t *valor_lexico;
@@ -69,21 +73,26 @@ extern int get_line_number();
 
 %%
 
-programa: 
+program: 
+	code
+	| %empty
+;
+
+code:
 	element
+	| element code 
 ;
 
 element: 	
-	global_variavel_decla element 	//{$$ = $2;}
-	| novos_tipos_decla element 	//{$$ = $2;}
-	| funcoes element 		//{$$ = $2;}
-	| %empty 			//{$$ = NULL;}
+	global_variavel_decla ';' 	//{$$ = $2;}
+	| novos_tipos_decla ';' 	//{$$ = $2;}
+	| funcoes  		//{$$ = $2;}
 ;
 
 
 global_variavel_decla: 
-	TK_IDENTIFICADOR static_opcional tipo ';' 
-	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo ';' 
+	TK_IDENTIFICADOR static_opcional tipo  
+	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo 
 ;
 
 static_opcional: 
@@ -110,7 +119,7 @@ tipo_primitivo:
 ;
 
 novos_tipos_decla: 
-	TK_PR_CLASS TK_IDENTIFICADOR '[' lista_campos ']' ';'
+	TK_PR_CLASS TK_IDENTIFICADOR '[' lista_campos ']' 
 ;
 
 lista_campos:
@@ -157,6 +166,7 @@ comandos:
 ;
 
 comando: 
+
 	local_variavel_decla
 	| atribuicao
 	| entrada_saida
