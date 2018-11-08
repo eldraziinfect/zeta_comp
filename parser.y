@@ -52,18 +52,7 @@ extern int get_line_number();
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-//mais um teste aqui
-%left '+'
-%left '-'
-%left '/'
-
-%right TK_IDENTIFICADOR
-
-%right '&'
-//%left '*'
-%right '*'
-%right '#'
-
+%left TK_IDENTIFICADOR
 
 %union {
   comp_dict_item_t *valor_lexico;
@@ -89,10 +78,18 @@ element:
 	| funcoes  		//{$$ = $2;}
 ;
 
-
+/*
 global_variavel_decla: 
 	TK_IDENTIFICADOR static_opcional tipo  
 	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo 
+;
+*/
+
+global_variavel_decla: 
+	TK_IDENTIFICADOR  tipo_primitivo
+	| TK_IDENTIFICADOR TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' TK_LIT_INT ']' static_opcional tipo 
+	| TK_IDENTIFICADOR TK_PR_STATIC tipo
 ;
 
 static_opcional: 
@@ -141,14 +138,14 @@ funcoes:
 header:
 	static_opcional tipo TK_IDENTIFICADOR //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
 ;
+
 lista_parametros: 
 	parametro ',' lista_parametros 	//{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} 
 	| parametro 			//{$$ = cria_nodo_unario(NULL, $1, $3, $5);} 
 ;
 
 parametro:
-	const_opcional tipo TK_IDENTIFICADOR			{}
-	| const_opcional TK_IDENTIFICADOR TK_IDENTIFICADOR	{}
+	const_opcional tipo TK_IDENTIFICADOR	{}
 ;
 
 
@@ -161,23 +158,22 @@ bloco:
 ;
 
 comandos: 
-	comando ';' comandos
-	| comando ';'
+	comando  comandos
+	| comando 
 ;
 
 comando: 
-
-	local_variavel_decla
-	| atribuicao
-	| entrada_saida
+	local_variavel_decla ';'
+	| atribuicao ';'
+	| entrada_saida ';'
 	| retorno
-	| chamada_funcao
-	| shift 
-	| bloco 
-	| fluxo_controle
-	| case 
-	| break
-	| continue
+	| chamada_funcao ';'
+	| shift ';'
+	| bloco ';'
+	| fluxo_controle ';'
+	| case ':'
+	| break ';'
+	| continue ';'
 ;
 
 local_variavel_decla: 
@@ -259,15 +255,15 @@ shift_simbol:
 ;
 
 retorno:
-	TK_PR_RETURN expressao ';'
+	TK_PR_RETURN expressao 
 ;
 
 break:
-	TK_PR_BREAK ';'
+	TK_PR_BREAK
 ;
 
 continue:
-	TK_PR_CONTINUE ';'
+	TK_PR_CONTINUE
 ;
 
 case:
@@ -404,7 +400,7 @@ exp_ternaria:
 	"exp" ':' "exp" '?' "exp"
 	| '(' exp_ternaria ')'
 ;
-
+/* */
 %%
 
 

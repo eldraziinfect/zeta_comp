@@ -85,14 +85,10 @@ element
     ;
 
 global_var_declaration
-    : ID primitive_type_specifier //{
-      //  $$ = make_global_var_decl($1, -1, false, make_primitive($2)); }
-    | ID ID //{
-      //  $$ = make_global_var_decl($1, -1, false, make_custom($2.val.string_v)); }
-    | ID //array static_modifier type_specifier {
-       // $$ = make_global_var_decl($1, $2, $3, $4); }
-    | ID STATIC type_specifier// {
-        //$$ = make_global_var_decl($1, -1, true, $3); }
+    : ID primitive_type_specifier //{      //  $$ = make_global_var_decl($1, -1, false, make_primitive($2)); }
+    | ID ID //{      //  $$ = make_global_var_decl($1, -1, false, make_custom($2.val.string_v)); }
+    | ID array static_modifier type_specifier {       // $$ = make_global_var_decl($1, $2, $3, $4); }
+    | ID STATIC type_specifier// {        //$$ = make_global_var_decl($1, -1, true, $3); }
     ;
 
 array
@@ -118,18 +114,12 @@ primitive_type_specifier
     ;
 
 literal
-    : INT_LITERAL// {
-       // $$ = make_literal($1); }
-    | FLOAT_LITERAL //{
-       // $$ = make_literal($1); }
-    | FALSE //{
-       // $$ = make_literal($1); }
-    | TRUE //{
-       // $$ = make_literal($1); }
-    | CHAR_LITERAL //{
-       // $$ = make_literal($1); }
-    | STRING_LITERAL //{
-        //$$ = make_literal($1); }
+    : INT_LITERAL// {       // $$ = make_literal($1); }
+    | FLOAT_LITERAL //{       // $$ = make_literal($1); }
+    | FALSE //{       // $$ = make_literal($1); }
+    | TRUE //{       // $$ = make_literal($1); }
+    | CHAR_LITERAL //{       // $$ = make_literal($1); }
+    | STRING_LITERAL //{        //$$ = make_literal($1); }
     ;
 
 type_specifier
@@ -147,8 +137,7 @@ field_list
     ;
 
 field
-    : access_modifier primitive_type_specifier ID //{
-        //$$ = make_field($1, make_primitive($2), $3); }
+    : access_modifier primitive_type_specifier ID //{        //$$ = make_field($1, make_primitive($2), $3); }
     ;
 
 access_modifier
@@ -159,12 +148,9 @@ access_modifier
     ;
 
 function_definition
-    : primitive_type_specifier ID parameters command_block //{
-        //$$ = make_function_def(false, make_primitive($1), $2, $3, $4); }
-    | ID ID parameters command_block //{
-        //$$ = make_function_def(false, make_custom($1.val.string_v), $2, $3, $4); }
-    | STATIC type_specifier ID parameters command_block //{
-        //$$ = make_function_def(true, $2, $3, $4, $5); }
+    : primitive_type_specifier ID parameters command_block //{        //$$ = make_function_def(false, make_primitive($1), $2, $3, $4); }
+    | ID ID parameters command_block //{        //$$ = make_function_def(false, make_custom($1.val.string_v), $2, $3, $4); }
+    | STATIC type_specifier ID parameters command_block //{        //$$ = make_function_def(true, $2, $3, $4, $5); }
     ;
 
 parameters
@@ -200,6 +186,7 @@ high_command
 command_list
     : command
     | command_list ',' command //{ $$ = make_cmd_list($1, $3); }
+;
 
 command
     : local_var_declaration
@@ -278,7 +265,7 @@ case
 
 input
     : INPUT expression// { $$ = make_in_cmd($2); }
-
+;
 output
     : OUTPUT expression_list //{ $$ = make_out_cmd($2); }
     ;
