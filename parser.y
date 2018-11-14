@@ -53,8 +53,8 @@ extern int get_line_number();
 %token TOKEN_ERRO
 
 // %right TK_IDENTIFICADOR - não muda nada
-%right '*' // não muda nada
-%left ';' // não muda nada
+//%right '*' // não muda nada
+//%left ';' // não muda nada
 /*
 %union {
   comp_dict_item_t *valor_lexico;
@@ -74,7 +74,7 @@ code:
 	| element code 
 ;
 
-element: 	
+element: 	""
 	global_variavel_decla ';' 	//{$$ = $2;}
 	| novos_tipos_decla ';' 	//{$$ = $2;}
 	| funcoes  		//{$$ = $2;}
@@ -423,6 +423,7 @@ exp_ternaria:
 	| '(' exp_ternaria ')'
 ;
 /* */
+// essa linha aqui em cima evite que o %% seja comentado
 %%
 
 
