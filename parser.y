@@ -52,14 +52,16 @@ extern int get_line_number();
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%left TK_IDENTIFICADOR
-
+// %right TK_IDENTIFICADOR - não muda nada
+%right '*' // não muda nada
+%left ';' // não muda nada
+/*
 %union {
   comp_dict_item_t *valor_lexico;
   comp_tree_t *nodo_arvore;
   int type;
 }
-
+*/
 %%
 
 program: 
@@ -128,8 +130,10 @@ encapsulamento:
 	TK_PR_PRIVATE
 	| TK_PR_PROTECTED
 	| TK_PR_PUBLIC
+	| %empty
 ;
 
+////// AHFG 4553
 funcoes: 
 	header '(' lista_parametros ')' bloco //{$$ = cria_nodo_ternario(NULL, $1, $3, $5);} ctz que isso tá errado, tem que começar nas folhas
 	| header '(' ')' bloco
@@ -166,7 +170,7 @@ comando:
 	local_variavel_decla ';'
 	| atribuicao ';'
 	| entrada_saida ';'
-	| retorno
+	| retorno ';'
 	| chamada_funcao ';'
 	| shift ';'
 	| bloco ';'
@@ -177,12 +181,26 @@ comando:
 ;
 
 local_variavel_decla: 
-	static_opcional const_opcional tipo TK_IDENTIFICADOR
-	| static_opcional const_opcional tipo_primitivo TK_IDENTIFICADOR TK_OC_LE literal
-	| static_opcional const_opcional tipo_primitivo TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	local_variavel_primitiva_decla
+	| local_variavel_usuario_decla
+;
+
+local_variavel_usuario_decla:
+	const_opcional tipo TK_IDENTIFICADOR 
+	| TK_PR_STATIC const_opcional tipo TK_IDENTIFICADOR
+;
+
+local_variavel_primitiva_decla:
+	const_opcional tipo_primitivo TK_IDENTIFICADOR inicializador_opcional
+	| TK_PR_STATIC const_opcional tipo_primitivo TK_IDENTIFICADOR inicializador_opcional
 	
 ;
 
+inicializador_opcional:
+	TK_OC_LE literal
+	| TK_OC_LE TK_IDENTIFICADOR
+	| %empty
+;
 /// marcador 2
 
 literal:
@@ -275,6 +293,11 @@ entrada_saida:
 	| TK_PR_OUTPUT lista_expressao
 ;
 
+lista_expressao: 
+	expressao ',' lista_expressao
+	| expressao
+;
+
 
 fluxo_controle: 
 	TK_PR_IF '(' expressao ')' TK_PR_THEN bloco
@@ -291,10 +314,6 @@ fluxo_controle:
 	| TK_PR_SWITCH '(' expressao ')' bloco
 ;
 
-lista_expressao: 
-	expressao ',' lista_expressao
-	| expressao
-;
 
 lista_comandos:
 	comando_for ',' lista_comandos ';' 
@@ -335,6 +354,8 @@ expressao_unaria:
 operando:
 	TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expressao ']' // nao era pra ser " '[' exp_inteira ']' " ?
+    | TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR '[' expressao ']' '$' TK_IDENTIFICADOR 
 	| literal
 	| chamada_funcao
 ;
@@ -397,7 +418,8 @@ operador_pipe:
 ///marcador 7
 
 exp_ternaria:
-	"exp" ':' "exp" '?' "exp"
+	//expressao ':' expressao '?' expressao // +5 S/R
+	"exp : exp ? exp"	
 	| '(' exp_ternaria ')'
 ;
 /* */

@@ -87,7 +87,7 @@ element
 global_var_declaration
     : ID primitive_type_specifier //{      //  $$ = make_global_var_decl($1, -1, false, make_primitive($2)); }
     | ID ID //{      //  $$ = make_global_var_decl($1, -1, false, make_custom($2.val.string_v)); }
-    | ID array static_modifier type_specifier {       // $$ = make_global_var_decl($1, $2, $3, $4); }
+    | ID array static_modifier type_specifier        // {$$ = make_global_var_decl($1, $2, $3, $4); }
     | ID STATIC type_specifier// {        //$$ = make_global_var_decl($1, -1, true, $3); }
     ;
 
@@ -105,26 +105,17 @@ const_modifier
     | CONST //{ $$ = true; }
     ;
 
+type_specifier
+    : primitive_type_specifier //{ $$ = make_primitive($1); }
+    | ID //{ $$ = make_custom($1.val.string_v); }
+    ;
+
 primitive_type_specifier
     : INT
     | FLOAT
     | BOOL
     | CHAR
     | STRING
-    ;
-
-literal
-    : INT_LITERAL// {       // $$ = make_literal($1); }
-    | FLOAT_LITERAL //{       // $$ = make_literal($1); }
-    | FALSE //{       // $$ = make_literal($1); }
-    | TRUE //{       // $$ = make_literal($1); }
-    | CHAR_LITERAL //{       // $$ = make_literal($1); }
-    | STRING_LITERAL //{        //$$ = make_literal($1); }
-    ;
-
-type_specifier
-    : primitive_type_specifier //{ $$ = make_primitive($1); }
-    | ID //{ $$ = make_custom($1.val.string_v); }
     ;
 
 class_definition
@@ -147,6 +138,7 @@ access_modifier
     | PROTECTED //{ $$ = PROT; }
     ;
 
+////// AHFG 4553
 function_definition
     : primitive_type_specifier ID parameters command_block //{        //$$ = make_function_def(false, make_primitive($1), $2, $3, $4); }
     | ID ID parameters command_block //{        //$$ = make_function_def(false, make_custom($1.val.string_v), $2, $3, $4); }
@@ -229,6 +221,15 @@ local_var_initialization
 local_var_initializer
     : variable
     | literal
+    ;
+
+literal
+    : INT_LITERAL// {       // $$ = make_literal($1); }
+    | FLOAT_LITERAL //{       // $$ = make_literal($1); }
+    | FALSE //{       // $$ = make_literal($1); }
+    | TRUE //{       // $$ = make_literal($1); }
+    | CHAR_LITERAL //{       // $$ = make_literal($1); }
+    | STRING_LITERAL //{        //$$ = make_literal($1); }
     ;
 
 class_var_declaration
@@ -318,7 +319,7 @@ while
 
 do_while
     : DO command_block WHILE '(' expression ')' //{        $$ = make_do_while_cmd($2, $5); }
-
+;
 switch
     : SWITCH '(' expression ')' command_block //{ $$ = make_switch_cmd($3, $5); }
     ;
